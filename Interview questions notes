@@ -1,0 +1,24 @@
+Questions encountered
+
+-- Algorithm
+Bytedance 1.Change BFS into DFS
+Grab 2. Chess number of jumps for a knight from one pos to another pos
+
+-- System design
+Grab 
+Design a twitter:
+1. For your architecture, is it Synchronous or Asynchronous?
+Which part can be Synchronous and which part can be Asynchronous?
+2. Why do you choose MySQL? Whats the advantage of choosing MySQL over others?
+3. What about sharded MySQL? Whats that and does that fit into the project?
+
+Indeed
+Design a Company review system:
+- title
+- comment
+- stars
+
+1. Do you fetch all of them?
+2. If you are switching pages and in the mean time 5 new ones are created, then the user will see 5 duplex data, how should you make sure that the data is consistent (user does not need to scroll for new data?) -- there is no cache
+3. If your problem is people complains that the writes are very slow, can you think of why?
+4. If your problem is that people are complaining writes are very slow in the peak hours, can you think of why and appoarh to resolve it?
