@@ -22,3 +22,26 @@ Design a Company review system:
 2. If you are switching pages and in the mean time 5 new ones are created, then the user will see 5 duplex data, how should you make sure that the data is consistent (user does not need to scroll for new data?) -- there is no cache
 3. If your problem is people complains that the writes are very slow, can you think of why?
 4. If your problem is that people are complaining writes are very slow in the peak hours, can you think of why and appoarh to resolve it?
+
+Tencent 
+What does a distributed syncing algorithm do?
+https://zhuanlan.zhihu.com/p/30292223
+
+Raft的选举由定时器触发，每个节点的触发时间都不相同。
+
+所有的节点在开始时状态都为Follower，当定时器触发选举后Term编号递增，该节点的状态由Follower转为Candidate，并且向其他节点发起RequestVote RPC请求，这时选举有3种情况可能发生：
+
+1 发起RequestVote的节点收到n/2+1（过半数）个节点的投票，该节点将从Candidate状态变为Leader状态，开始向其他节点发送HeartBeat以保持Leader的正常状态
+
+2 如果收到投票请求后，该节点发现发起投票的节点Term大于自己，则该节点状态从Candidate转为Follower，否则保持Candidate状态，并且拒绝该投票请求
+
+3 选举期间发生了超时，则Term编号递增，重新发起选举
+
+日志复制
+日志复制主要的作用就是用来保证节点的数据一致性与高可用性。
+
+当Leader被选举出来后，所有的事务操作都必须要经过Leader处理。这些事务操作成功后，将会被按顺序写入到LOG中，每个LOG都包含一个index编号。
+
+Leader在LOG发生变化后，通过HeartBeat将新的LOG同步到Follower上，Follower在接收到LOG后，再向Leader发送ACK信息，当Leader接到大多数（2/n+1）Follower的ACK信息后，将该LOG设置为已提交，并且Leader将LOG追加到本地磁盘中。
+
+同时Leader将在下一个HeartBeat中，通知所有的Follower将该LOG存储在各自的本地磁盘中。
